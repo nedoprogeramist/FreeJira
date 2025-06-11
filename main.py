@@ -1,6 +1,6 @@
 from typing import Union
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
 
@@ -15,15 +15,16 @@ issues = [
 ]
 
 @app.get("/items/{id}")
-async def read_id(id: int):
+async def get_issue_by_id(id: int):
 	for issue_id in issues:
 		if issue_id['id'] == id:
 			return issue_id
-		return {"error": "Item not found"}
+	
+	raise HTTPException(status_code=404, detail="issue not found")
 	
 @app.get("/items/key/{key}")
-async def read_keys(key: str):
+async def get_issue_by_key(key: str):
 	for issue_key in issues:
 		if issue_key['key'] == key:
 			return issue_key
-		return {"error": "Item not found"}
+	raise HTTPException(status_code=404, detail="issue not found")
